@@ -30,10 +30,10 @@ class TicketController extends Controller {
         $ticket = new Ticket;
         $ticket->detail = $request->detail;
         $ticket->id_user = $request->user;
-        $ticket->ticket_pedido = 'no';
+        $ticket->ticket_pedido = "NO";
         $ticket->save();
 
-        return "ok";
+        return "correcto";
     }
 
     public function update(Request $request, $id) {
@@ -43,6 +43,31 @@ class TicketController extends Controller {
         $ticket->updated_at = date('Y-m-d H:i:s');
         $ticket->save();
 
+        return "correcto";
+    }
+
+    public function dataOwner(Request $request) {
+        $tickets = Ticket::where('id_user', '=', $request->userId)->whereNull('deleted_at')->get();
+        $data = [];
+
+        foreach ($tickets as $ticket) {
+            $obj = new \stdClass();
+            $obj->id = $ticket->id;
+            $obj->user = $ticket->user_relation->name;
+            $obj->detail = $ticket->detail;
+            $obj->pedido = $ticket->ticket_pedido;
+            array_push($data, $obj);
+        }
+
+        return $data;
+    }
+
+    public function confirm(Request $request) {
+        $ticket = Ticket::findOrFail($request->itemId);
+        
+        $ticket->ticket_pedido = "SI";
+        $ticket->save();
+        
         return "correcto";
     }
 
