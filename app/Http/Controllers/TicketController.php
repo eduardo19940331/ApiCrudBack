@@ -14,6 +14,7 @@ class TicketController extends Controller {
             $obj = new \stdClass();
             $obj->id = $row->id;
             $obj->detail = $row->detail;
+            $obj->ticket_pedido = $row->ticket_pedido;
             $obj->user = $row->user_relation->name;
             array_push($data, $obj);
         }
@@ -65,7 +66,7 @@ class TicketController extends Controller {
     public function confirm(Request $request) {
         $ticket = Ticket::findOrFail($request->itemId);
         
-        $ticket->ticket_pedido = "SI";
+        $ticket->ticket_pedido = ($ticket->ticket_pedido == "NO") ? "SI" : "NO";
         $ticket->save();
         
         return "correcto";

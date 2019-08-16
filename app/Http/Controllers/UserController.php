@@ -20,7 +20,7 @@ class UserController extends Controller {
     public function register(Request $request) {
         $validator = Validator::make($request->json()->all(), [
                     'name' => 'required|string|max:255',
-                    'email' => 'required|string|email|max:255',
+                    'email' => 'required|string|email|max:255|unique:system_user',
                     'password' => 'required|string|min:6',
         ]);
 
