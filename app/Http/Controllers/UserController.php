@@ -23,7 +23,7 @@ class UserController extends Controller {
                     'email' => 'required|string|email|max:255',
                     'password' => 'required|string|min:6',
         ]);
-        
+
         if ($validator->fails()) {
             return response()->json($validator->errors()->toJson(), 400);
         }
@@ -32,7 +32,7 @@ class UserController extends Controller {
                     'name' => $request->json()->get('name'),
                     'email' => $request->json()->get('email'),
                     'password' => Hash::make($request->json()->get('password')),
-                    'id_tipouser' => '2'
+                    'id_tipouser' => 2
         ]);
 
         $token = JWTAuth::fromUser($user);
@@ -41,17 +41,19 @@ class UserController extends Controller {
     }
 
     public function login(Request $request) {
-        
+
         $credentials = $request->json()->all();
-        
+        $email = $request->json()->get('email');
+        $password = $request->json()->get('password');
         try {
+            $user = User::where('email', '=', $email)->whereNull('deleted_at')->first();
             if (!$token = JWTAuth::attempt($credentials)) {
                 return response()->json(['error' => 'invalid_credentials_man'], 400);
             }
         } catch (JWTException $e) {
-            return response()->json(['error'=>'could_not_created_token'],500);
+            return response()->json(['error' => 'could_not_created_token'], 500);
         }
-        return response()->json(compact('token'));
+        return response()->json(['token'=>compact('token'), 'user'=>$user]);
     }
 
     public function getAuthenticatedUser() {
