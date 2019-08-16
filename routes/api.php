@@ -26,13 +26,15 @@ Route::middleware('auth:api')->get('/user', function(Request $request){
 });
 
 //Ticket Controller
-Route::get('ticket', 'TicketController@index');
-Route::get('ticket/{id}', 'TicketController@show');
-Route::post('ticket/', 'TicketController@store');
-Route::put('ticket/{id}', 'TicketController@update');
-Route::delete('ticket/{id}', 'TicketController@delete');
-Route::post('ticket/owner', 'TicketController@dataOwner');
-Route::post('ticket/confirm', 'TicketController@confirm');
+Route::prefix('ticket')->group(function () {
+    Route::get('/', 'TicketController@index');
+    Route::get('/{id}', 'TicketController@show');
+    Route::post('/', 'TicketController@store');
+    Route::put('/{id}', 'TicketController@update');
+    Route::delete('/{id}', 'TicketController@delete');
+    Route::post('owner', 'TicketController@dataOwner');
+    Route::post('confirm', 'TicketController@confirm');
+});
 
 //UserController
 Route::post('cmb_user/', 'UserController@getDataUser');
