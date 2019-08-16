@@ -16,6 +16,15 @@ use Illuminate\Http\Request;
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
+//Login and Register
+Route::post('register','UserController@register');
+Route::post('login','UserController@login');
+Route::get('profile','UserController@getAuthenticatedUser');
+
+Route::middleware('auth:api')->get('/user', function(Request $request){
+    return $request->user();
+});
+
 //Ticket Controller
 Route::get('ticket', 'TicketController@index');
 Route::get('ticket/{id}', 'TicketController@show');
